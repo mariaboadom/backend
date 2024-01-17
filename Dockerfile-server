@@ -1,0 +1,14 @@
+# Usa la imagen oficial de Python como base
+FROM python:3
+
+# Establece el directorio de trabajo en /app
+WORKDIR /server
+
+# Copia el archivo de tu programa Python al directorio de trabajo
+COPY backend.py /server/
+
+# Instala las dependencias si las hay (puedes ajustar esto según tus necesidades)
+RUN pip install -r requirements.txt
+
+# Ejecuta tu programa Python cuando se inicia el contenedor
+CMD ["python", "backend.py"]
