@@ -5,8 +5,7 @@ FROM python:3
 WORKDIR /server
 
 # Copia el archivo de tu programa Python al directorio de trabajo
-COPY backend.py /server/
-
+COPY ./ ./
 # Instala las dependencias si las hay (puedes ajustar esto según tus necesidades)
 RUN pip install -r requirements.txt
 
