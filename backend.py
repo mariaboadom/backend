@@ -49,12 +49,12 @@ def upload_to_s3(local_file, s3_path):
     except FileNotFoundError:
         return False
 
-def enviar_mensaje(path,user_id,id_compra,query):
+def enviar_mensaje(path,user_id,id_compra,email,query):
     # Envía el mensaje a la cola
     print("USER ID",user_id)
     sqs.send_message(
         QueueUrl=queueUrlResponse,
-        MessageBody=query+";"+ path+";"+user_id+";"+id_compra,
+        MessageBody=query+";"+ path+";"+user_id+";"+id_compra+";"+email,
         MessageGroupId= user_id
     )
 
@@ -183,7 +183,8 @@ def leer_mensajes_sqs():
                     event = args[0]
                     nameClient = args[1]                    
                     numTickets = int(args[2])
-                    user_id = args[3]
+                    email = args[3]
+                    user_id = args[4]
                     
                     
                     #COMPROBAR TOKEN ANTES DE ACCEDER A LA DYNAMO PARA VER LOS VENDIDOS
@@ -194,12 +195,12 @@ def leer_mensajes_sqs():
                         purchase_number = generar_id_compra()
                         output_filename = purchase_number + ".pdf" #el nombre del fichero es el id de compra
                         generate_ticket(event, nameClient, purchase_number, numTickets,output_filename)
-                        enviar_mensaje(event,user_id,purchase_number, "ok") #Enviamos la respuesta
+                        enviar_mensaje(event,user_id,purchase_number,email, "ok") #Enviamos la respuesta
 
 
                     else :                    
                         sendToken()  
-                        enviar_mensaje(event,user_id, "","error") #Enviamos la respuesta
+                        enviar_mensaje(event,user_id, "","","error") #Enviamos la respuesta
 
             else:
                 print("No se recibieron mensajes en la cola.")
